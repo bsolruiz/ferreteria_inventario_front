@@ -4,24 +4,36 @@ import LoginPage from './features/auth/pages/LoginPage';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState('login');
+  const [currentUser, setCurrentUser] = useState(null); // { idUsuario, nombres, correo, rolNombre }
 
   useEffect(() => {
     document.documentElement.classList.add('dark');
   }, []);
 
+  const handleLogin = (usuario) => {
+    setCurrentUser(usuario);
+    setCurrentScreen('dashboard');
+  };
+
   const renderScreen = () => {
     switch (currentScreen) {
       case 'login':
-        return <LoginPage onLogin={() => setCurrentScreen('dashboard')} />;
+        return <LoginPage onLogin={handleLogin} />;
       case 'dashboard':
-        return <div className="text-white p-8">Dashboard próximamente...</div>;
+        return (
+          <div className="text-white p-8">
+            <p>Dashboard próximamente...</p>
+            <p className="text-slate-400 mt-2 text-sm">
+              Sesión: <strong>{currentUser?.nombres}</strong> — Rol: <strong>{currentUser?.rolNombre}</strong>
+            </p>
+          </div>
+        );
       default:
-        return <LoginPage onLogin={() => setCurrentScreen('dashboard')} />;
+        return <LoginPage onLogin={handleLogin} />;
     }
   };
 
   return (
-    // ← Agrega h-screen aquí
     <div className="min-h-screen h-screen font-sans">
       <AnimatePresence mode="wait">
         <motion.div
@@ -30,7 +42,7 @@ export default function App() {
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -10 }}
           transition={{ duration: 0.2 }}
-          className="h-full"  // ← h-full para ocupar todo el padre
+          className="h-full"
         >
           {renderScreen()}
         </motion.div>
