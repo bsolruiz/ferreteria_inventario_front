@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import LoginPage from './features/auth/pages/LoginPage';
+import ReportsScreen from './features/reports/pages/ReportsScreen';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState('login');
@@ -26,8 +27,16 @@ export default function App() {
             <p className="text-slate-400 mt-2 text-sm">
               Sesión: <strong>{currentUser?.nombres}</strong> — Rol: <strong>{currentUser?.rolNombre}</strong>
             </p>
+            <button 
+              onClick={() => setCurrentScreen('reports')} 
+              className="mt-4 bg-primary text-white px-4 py-2 rounded-lg"
+            >
+              Ir a Reportes
+            </button>
           </div>
         );
+      case 'reports':
+        return <ReportsScreen onNavigate={setCurrentScreen} />;
       default:
         return <LoginPage onLogin={handleLogin} />;
     }
