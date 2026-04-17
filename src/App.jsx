@@ -1,15 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import LoginPage from './features/auth/pages/LoginPage';
 import ReportsScreen from './features/reports/pages/ReportsScreen';
+import MovimientosReportScreen from './features/reports/pages/MovimientosReportScreen';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState('login');
   const [currentUser, setCurrentUser] = useState(null); // { idUsuario, nombres, correo, rolNombre }
 
-  useEffect(() => {
-    document.documentElement.classList.add('dark');
-  }, []);
+
 
   const handleLogin = (usuario) => {
     setCurrentUser(usuario);
@@ -37,6 +36,8 @@ export default function App() {
         );
       case 'reports':
         return <ReportsScreen onNavigate={setCurrentScreen} />;
+      case 'movimientos':
+        return <MovimientosReportScreen onNavigate={setCurrentScreen} />;
       default:
         return <LoginPage onLogin={handleLogin} />;
     }

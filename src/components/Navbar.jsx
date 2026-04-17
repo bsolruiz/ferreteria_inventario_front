@@ -2,7 +2,7 @@ import React from "react";
 
 export default function Navbar({ active, onNavigate }) {
   return (
-    <nav className="bg-white dark:bg-slate-800 shadow-sm border-b border-slate-200 dark:border-slate-700">
+    <nav className="bg-slate-800 shadow-sm border-b border-slate-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex">
@@ -14,13 +14,13 @@ export default function Navbar({ active, onNavigate }) {
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
               <button
                 onClick={() => onNavigate("dashboard")}
-                className={`${active === "dashboard" ? "border-primary text-slate-900 dark:text-white" : "border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700 dark:hover:text-slate-300"} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
+                className={`${active === "dashboard" ? "border-primary text-white" : "border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-300"} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
               >
                 Dashboard
               </button>
               <button
                 onClick={() => onNavigate("reports")}
-                className={`${active === "reports" ? "border-primary text-slate-900 dark:text-white" : "border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700 dark:hover:text-slate-300"} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
+                className={`${active === "reports" ? "border-primary text-white" : "border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-300"} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
               >
                 Reportes
               </button>

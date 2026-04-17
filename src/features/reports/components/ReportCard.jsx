@@ -5,15 +5,15 @@ export default function ReportCard({
   title,
   desc,
   icon,
-  bgColor = "bg-slate-100 dark:bg-slate-800",
+  bgColor = "bg-slate-800",
   onDownload,
   loading,
 }) {
   return (
-    <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5 flex items-center justify-between shadow-sm hover:shadow-md transition-shadow">
+    <div className="bg-slate-800 border border-slate-700 rounded-xl p-5 flex items-center justify-between shadow-sm hover:shadow-md transition-shadow">
       <div className="flex items-center gap-4">
         <div
-          className={`w-12 h-12 rounded-lg ${bgColor} flex items-center justify-center text-slate-600 dark:text-slate-300 shrink-0`}
+          className={`w-12 h-12 rounded-lg ${bgColor} flex items-center justify-center text-slate-300 shrink-0`}
         >
           {icon}
         </div>

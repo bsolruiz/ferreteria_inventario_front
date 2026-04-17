@@ -58,7 +58,7 @@ export default function ReportsScreen({ onNavigate }) {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900/50">
+    <div className="min-h-screen bg-slate-900/50">
       <Navbar active="reports" onNavigate={onNavigate} />
 
       <main className="p-4 sm:p-8">
@@ -97,7 +97,7 @@ export default function ReportsScreen({ onNavigate }) {
                 title="A punto de agotarse"
                 desc="Productos con stock bajo el mínimo"
                 icon={<Icons.AlertTriangle className="text-amber-500" />}
-                bgColor="bg-amber-100 dark:bg-amber-900/30"
+                bgColor="bg-amber-900/30"
                 onDownload={() =>
                   handleDownload(
                     fetchProductosBajoStock,
@@ -111,7 +111,7 @@ export default function ReportsScreen({ onNavigate }) {
                 title="Fuera de stock"
                 desc="Items agotados que requieren reposición"
                 icon={<Icons.Ban className="text-red-500" />}
-                bgColor="bg-red-100 dark:bg-red-900/30"
+                bgColor="bg-red-900/30"
                 onDownload={() =>
                   handleDownload(
                     fetchProductosSinStock,
@@ -143,7 +143,7 @@ export default function ReportsScreen({ onNavigate }) {
               <h3 className="text-xl font-bold">Reportes - Movimientos</h3>
             </div>
 
-            <div className="bg-primary/5 dark:bg-primary/10 border border-primary/20 rounded-xl p-6 flex flex-col md:flex-row items-start md:items-center justify-between shadow-sm gap-4">
+            <div className="bg-primary/10 border border-primary/20 rounded-xl p-6 flex flex-col md:flex-row items-start md:items-center justify-between shadow-sm gap-4">
               <div className="flex items-center gap-5">
                 <div className="w-14 h-14 rounded-full bg-primary/20 flex items-center justify-center text-primary shrink-0">
                   <Icons.TrendingUp size={32} />
@@ -159,23 +159,11 @@ export default function ReportsScreen({ onNavigate }) {
                 </div>
               </div>
               <button
-                onClick={() =>
-                  handleDownload(
-                    fetchMovimientos,
-                    "Historial_Movimientos",
-                    columnasMovimientos,
-                  )
-                }
-                disabled={loading}
-                className="bg-white dark:bg-slate-800 text-primary border border-primary/30 hover:bg-primary hover:text-white disabled:opacity-50 text-sm font-bold px-6 py-2.5 rounded-lg transition-all flex items-center gap-2 group whitespace-nowrap shrink-0"
+                onClick={() => onNavigate('movimientos')}
+                className="bg-slate-800 text-primary border border-primary/30 hover:bg-primary hover:text-white text-sm font-bold px-6 py-2.5 rounded-lg transition-all flex items-center gap-2 group whitespace-nowrap shrink-0"
               >
-                {loading ? "Descargando..." : "Descargar reporte"}
-                {!loading && (
-                  <Icons.Download
-                    className="group-hover:-translate-y-1 transition-transform"
-                    size={18}
-                  />
-                )}
+                Ver movimientos
+                <span className="group-hover:translate-x-1 transition-transform text-lg leading-none">→</span>
               </button>
             </div>
           </section>
