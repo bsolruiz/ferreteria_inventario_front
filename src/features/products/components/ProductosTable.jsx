@@ -171,11 +171,11 @@ export default function ProductosTable({ productos, onActualizado, onEliminado }
             <thead>
               <tr className="bg-[var(--color-background-dark)] border-b border-slate-800 text-xs uppercase text-slate-500 font-semibold tracking-wider">
                 <th className="px-6 py-4">Producto</th>
-                <th className="px-6 py-4">Código de Barras</th>
+                <th className="px-6 py-4">ID</th>
                 <th className="px-6 py-4">Categoría</th>
                 <th className="px-6 py-4">Stock</th>
                 <th className="px-6 py-4">Precio</th>
-                <th className="px-6 py-4 text-center">Estado</th>
+                <th className="px-6 py-4 text-center">Disponibilidad</th>
                 <th className="px-6 py-4 text-right">Acciones</th>
               </tr>
             </thead>
@@ -197,7 +197,7 @@ export default function ProductosTable({ productos, onActualizado, onEliminado }
                         <p className="text-sm font-medium text-white">{p.nombreProducto}</p>
                         <p className="text-xs text-slate-500 mt-0.5 line-clamp-1">{p.descripcion}</p>
                       </td>
-                      <td className="px-6 py-4 text-sm text-slate-400 font-mono">{p.codigoBarras}</td>
+                      <td className="px-6 py-4 text-sm text-slate-400 font-mono">#{p.idProducto}</td>
                       <td className="px-6 py-4">
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20">
                           {p.categoriaNombre}
