@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import LoginPage from './features/auth/pages/LoginPage';
+import InventarioPage from './features/products/pages/InventarioPage';
+import CrearProductoPage from './features/products/pages/CrearProductoPage';
 import ReportsScreen from './features/reports/pages/ReportsScreen';
 import MovimientosReportScreen from './features/reports/pages/MovimientosReportScreen';
 
@@ -8,36 +10,32 @@ export default function App() {
   const [currentScreen, setCurrentScreen] = useState('login');
   const [currentUser, setCurrentUser] = useState(null); // { idUsuario, nombres, correo, rolNombre }
 
-
+  useEffect(() => {
+    document.documentElement.classList.add('dark');
+  }, []);
 
   const handleLogin = (usuario) => {
     setCurrentUser(usuario);
-    setCurrentScreen('dashboard');
+    setCurrentScreen('inventario');
+  };
+
+  const handleNavegar = (pantalla) => {
+    if (pantalla === 'login') setCurrentUser(null);
+    setCurrentScreen(pantalla);
   };
 
   const renderScreen = () => {
     switch (currentScreen) {
       case 'login':
         return <LoginPage onLogin={handleLogin} />;
-      case 'dashboard':
-        return (
-          <div className="text-white p-8">
-            <p>Dashboard próximamente...</p>
-            <p className="text-slate-400 mt-2 text-sm">
-              Sesión: <strong>{currentUser?.nombres}</strong> — Rol: <strong>{currentUser?.rolNombre}</strong>
-            </p>
-            <button 
-              onClick={() => setCurrentScreen('reports')} 
-              className="mt-4 bg-primary text-white px-4 py-2 rounded-lg"
-            >
-              Ir a Reportes
-            </button>
-          </div>
-        );
+      case 'inventario':
+        return <InventarioPage onNavegar={handleNavegar} currentUser={currentUser} />;
+      case 'crear-producto':
+        return <CrearProductoPage onNavegar={handleNavegar} />;
       case 'reports':
-        return <ReportsScreen onNavigate={setCurrentScreen} />;
+        return <ReportsScreen onNavigate={handleNavegar} />;
       case 'movimientos':
-        return <MovimientosReportScreen onNavigate={setCurrentScreen} />;
+        return <MovimientosReportScreen onNavigate={handleNavegar} />;
       default:
         return <LoginPage onLogin={handleLogin} />;
     }
