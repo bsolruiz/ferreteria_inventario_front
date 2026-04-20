@@ -11,7 +11,7 @@ import {
 } from "../../../api/reportesAPI";
 import { exportToExcel } from "../../../utils/excelUtils";
 
-export default function ReportsScreen({ onNavigate }) {
+export default function ReportsScreen({ onNavigate, currentUser }) {
   const [loading, setLoading] = useState(false);
 
   const handleDownload = async (fetchFunction, fileName, columns) => {
@@ -59,8 +59,11 @@ export default function ReportsScreen({ onNavigate }) {
 
   return (
     <div className="min-h-screen bg-slate-900/50">
-      <Navbar active="reports" onNavigate={onNavigate} />
-
+<Navbar 
+  active="reports" 
+  onNavigate={onNavigate} 
+  currentUser={currentUser} 
+/>
       <main className="p-4 sm:p-8">
         <div className="max-w-5xl mx-auto">
           <header className="mb-8">

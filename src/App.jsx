@@ -33,7 +33,7 @@ export default function App() {
       case 'crear-producto':
         return <CrearProductoPage onNavegar={handleNavegar} />;
       case 'reports':
-        return <ReportsScreen onNavigate={handleNavegar} />;
+        return <ReportsScreen onNavigate={handleNavegar}  currentUser={currentUser} />;
       case 'movimientos':
         return <MovimientosReportScreen onNavigate={handleNavegar} />;
       default:
