@@ -3,7 +3,6 @@ import Navbar from "../../../components/Navbar";
 import { Icons } from "../../../components/Icons";
 import ReportCard from "../components/ReportCard";
 import {
-  fetchMovimientos,
   fetchProductosExistentes,
   fetchProductosBajoStock,
   fetchProductosSinStock,
@@ -48,22 +47,13 @@ export default function ReportsScreen({ onNavigate, currentUser }) {
     { key: "valorTotal", header: "Valor Total" },
   ];
 
-  const columnasMovimientos = [
-    { key: "idMovimiento", header: "ID Movimiento" },
-    { key: "fechaRegistro", header: "Fecha" },
-    { key: "tipoMovimiento", header: "Tipo" },
-    { key: "productoNombre", header: "Producto" },
-    { key: "motivo", header: "Motivo" },
-    { key: "usuarioNombre", header: "Usuario" },
-  ];
-
   return (
-    <div className="min-h-screen bg-slate-900/50">
-<Navbar 
-  active="reports" 
-  onNavigate={onNavigate} 
-  currentUser={currentUser} 
-/>
+    <div className="min-h-screen bg-[var(--color-background-dark)]">
+      <Navbar
+        active="reports"
+        onNavigate={onNavigate}
+        currentUser={currentUser}
+      />
       <main className="p-4 sm:p-8">
         <div className="max-w-5xl mx-auto">
           <header className="mb-8">
@@ -162,11 +152,13 @@ export default function ReportsScreen({ onNavigate, currentUser }) {
                 </div>
               </div>
               <button
-                onClick={() => onNavigate('movimientos')}
+                onClick={() => onNavigate("movimientos")}
                 className="bg-slate-800 text-primary border border-primary/30 hover:bg-primary hover:text-white text-sm font-bold px-6 py-2.5 rounded-lg transition-all flex items-center gap-2 group whitespace-nowrap shrink-0"
               >
                 Ver movimientos
-                <span className="group-hover:translate-x-1 transition-transform text-lg leading-none">→</span>
+                <span className="group-hover:translate-x-1 transition-transform text-lg leading-none">
+                  →
+                </span>
               </button>
             </div>
           </section>

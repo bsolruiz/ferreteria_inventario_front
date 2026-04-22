@@ -4,6 +4,7 @@ import EditarProductoModal from './EditarProductoModal';
 import ConfirmDeleteModal from './ConfirmDeleteModal';
 import ErrorModal from './ErrorModal';
 import { Search, ChevronLeft, ChevronRight, Filter } from 'lucide-react';
+import { toast } from 'react-hot-toast';
 
 const ITEMS_POR_PAGINA = 10;
 
@@ -73,13 +74,14 @@ export default function ProductosTable({ productos, onActualizado, onEliminado }
     setEliminando(true);
     try {
       await eliminarProducto(productoAEliminar.idProducto);
+      toast.success('Producto eliminado correctamente');
       onEliminado(productoAEliminar.idProducto);
       setProductoAEliminar(null);
     } catch (err) {
+      const errorMsg = err.response?.data?.mensaje || 'Error al eliminar el producto';
+      toast.error(errorMsg);
       setProductoAEliminar(null);
-      setErrorEliminar(
-        err.response?.data?.mensaje || 'Error al eliminar el producto'
-      );
+      setErrorEliminar(errorMsg);
     } finally {
       setEliminando(false);
     }

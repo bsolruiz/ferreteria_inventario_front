@@ -8,6 +8,14 @@ import {
   TrendingUp,
   ArrowRight,
   Download,
+  PlusCircle,
+  MinusCircle,
+  Calendar,
+  Search,
+  Save,
+  Trash2,
+  Plus,
+  Minus,
 } from "lucide-react";
 
 export const Icons = {
@@ -20,4 +28,12 @@ export const Icons = {
   TrendingUp,
   ArrowRight,
   Download,
+  PlusCircle,
+  MinusCircle,
+  Calendar,
+  Search,
+  Save,
+  Trash2,
+  Plus,
+  Minus,
 };
