@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { crearProducto, listarCategorias } from '../pages/productoService';
+import { toast } from 'react-hot-toast';
 
 export default function CrearProductoPage({ onNavegar }) {
   const [form, setForm] = useState({
@@ -32,9 +33,12 @@ export default function CrearProductoPage({ onNavegar }) {
         precio: parseFloat(form.precio),
         categoriaId: parseInt(form.categoriaId),
       });
+      toast.success('Producto creado correctamente');
       onNavegar('inventario');
     } catch (err) {
-      setError(err.response?.data?.mensaje || 'Error al crear el producto');
+      const errorMsg = err.response?.data?.mensaje || 'Error al crear el producto';
+      toast.error(errorMsg);
+      setError(errorMsg);
     } finally {
       setLoading(false);
     }

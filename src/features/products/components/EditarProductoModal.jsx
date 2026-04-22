@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { actualizarProducto, listarCategorias } from '../pages/productoService';
+import { toast } from 'react-hot-toast';
 
 export default function EditarProductoModal({ producto, onClose, onGuardado }) {
   const [form, setForm] = useState({
@@ -34,9 +35,12 @@ useEffect(() => {
         precio: parseFloat(form.precio),
         categoriaId: parseInt(form.categoriaId),
       });
+      toast.success('Producto actualizado correctamente');
       onGuardado(actualizado);
     } catch (err) {
-      setError(err.response?.data?.mensaje || 'Error al actualizar');
+      const errorMsg = err.response?.data?.mensaje || 'Error al actualizar';
+      toast.error(errorMsg);
+      setError(errorMsg);
     } finally {
       setLoading(false);
     }

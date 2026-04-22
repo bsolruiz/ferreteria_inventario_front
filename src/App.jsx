@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion as Motion } from 'motion/react';
+import { Toaster } from 'react-hot-toast';
 import LoginPage from './features/auth/pages/LoginPage';
 import InventarioPage from './features/products/pages/InventarioPage';
 import CrearProductoPage from './features/products/pages/CrearProductoPage';
 import ReportsScreen from './features/reports/pages/ReportsScreen';
 import MovimientosReportScreen from './features/reports/pages/MovimientosReportScreen';
+import MovementScreen from './features/movimientos/pages/MovementScreen';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState('login');
@@ -36,6 +38,8 @@ export default function App() {
         return <ReportsScreen onNavigate={handleNavegar}  currentUser={currentUser} />;
       case 'movimientos':
         return <MovimientosReportScreen onNavigate={handleNavegar} />;
+      case 'movimiento':
+        return <MovementScreen onNavigate={handleNavegar} currentUser={currentUser} />;
       default:
         return <LoginPage onLogin={handleLogin} />;
     }
@@ -43,8 +47,15 @@ export default function App() {
 
   return (
     <div className="min-h-screen h-screen font-sans">
+      <Toaster position="top-right" toastOptions={{
+        className: 'bg-slate-800 text-white border border-slate-700',
+        style: {
+          background: '#1e293b',
+          color: '#fff',
+        },
+      }} />
       <AnimatePresence mode="wait">
-        <motion.div
+        <Motion.div
           key={currentScreen}
           initial={{ opacity: 0, x: 10 }}
           animate={{ opacity: 1, x: 0 }}
@@ -53,7 +64,7 @@ export default function App() {
           className="h-full"
         >
           {renderScreen()}
-        </motion.div>
+        </Motion.div>
       </AnimatePresence>
     </div>
   );

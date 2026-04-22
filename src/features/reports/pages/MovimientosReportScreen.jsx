@@ -12,7 +12,7 @@ import {
   ArrowUp,
   ArrowDown,
 } from "lucide-react";
-import { motion } from "motion/react";
+import { motion as Motion } from "motion/react";
 import { exportToExcel } from "../../../utils/excelUtils";
 
 // --- Constantes fuera del componente para evitar recreación en cada render ---
@@ -34,6 +34,11 @@ const formatTime = (dateStr) =>
 const ExpandableText = memo(({ text, limit = 60 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
+  const toggle = useCallback((e) => {
+    e.stopPropagation();
+    setIsExpanded((v) => !v);
+  }, []);
+
   if (!text)
     return (
       <span className="text-[10px] text-slate-500 tracking-wide italic">
@@ -42,10 +47,6 @@ const ExpandableText = memo(({ text, limit = 60 }) => {
     );
 
   const shouldTruncate = text.length > limit;
-  const toggle = useCallback((e) => {
-    e.stopPropagation();
-    setIsExpanded((v) => !v);
-  }, []);
 
   return (
     <div className="flex flex-col">
@@ -84,19 +85,19 @@ const MovementBadge = memo(({ tipo }) => {
 MovementBadge.displayName = "MovementBadge";
 
 const MovementRow = memo(({ movement, idx }) => (
-  <motion.tr
+  <Motion.tr
     initial={{ opacity: 0, y: 10 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ delay: idx * 0.05 }}
     className="hover:bg-slate-700/20 transition-colors group"
   >
-    <td className="px-6 py-5">
+    <td className="px-4 py-2.5">
       <span className="font-mono text-xs text-slate-400">#</span>
       <span className="font-semibold text-slate-200 group-hover:text-primary transition-colors">
         {movement.idMovimiento}
       </span>
     </td>
-    <td className="px-6 py-5">
+    <td className="px-4 py-2.5">
       <div className="flex flex-col">
         <span className="text-sm font-medium text-slate-300">
           {formatDate(movement.fechaRegistro)}
@@ -114,15 +115,15 @@ const MovementRow = memo(({ movement, idx }) => (
         <ExpandableText text={movement.motivo} />
       </div>
     </td>
-    <td className="px-6 py-5">
+    <td className="px-4 py-2.5">
       <span className="text-sm text-slate-300">
         {movement.usuarioNombre ?? "Sistema"}
       </span>
     </td>
-    <td className="px-6 py-5 text-center">
+    <td className="px-4 py-2.5 text-center">
       <MovementBadge tipo={movement.tipoMovimiento} />
     </td>
-  </motion.tr>
+  </Motion.tr>
 ));
 MovementRow.displayName = "MovementRow";
 
@@ -158,14 +159,14 @@ export default function MovimientosReportScreen({ onNavigate }) {
   const visibleEnd = Math.min(startIndex + 5, totalItems);
 
   return (
-    <div className="min-h-screen bg-slate-900/50">
+    <div className="min-h-screen bg-[var(--color-background-dark)]">
       <Navbar active="reports" onNavigate={onNavigate} />
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
+      <main className="max-w-7xl mx-auto px-4 py-6">
         {/* Title & Actions */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight mb-2">
+            <h1 className="text-2xl font-bold tracking-tight mb-1">
               Reporte de Movimientos
             </h1>
             <p className="text-slate-500 text-sm max-w-md">
@@ -175,7 +176,7 @@ export default function MovimientosReportScreen({ onNavigate }) {
           </div>
           <button
             onClick={handleExportCSV}
-            className="flex items-center gap-2 bg-slate-800/50 hover:bg-slate-800 text-slate-100 px-6 py-2.5 rounded-lg text-sm font-medium transition-all border border-slate-700/50 group"
+            className="flex items-center gap-2 bg-slate-800/50 hover:bg-slate-800 text-slate-100 px-5 py-2 rounded-lg text-xs font-medium transition-all border border-slate-700/50 group"
           >
             <Download
               size={18}
@@ -188,8 +189,8 @@ export default function MovimientosReportScreen({ onNavigate }) {
         {/* Movements History Card */}
         <div className="bg-slate-800/80 rounded-xl border border-slate-700 shadow-2xl overflow-hidden">
           {/* Card Header */}
-          <div className="px-6 py-5 border-b border-slate-700 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <h2 className="font-semibold text-lg flex items-center gap-2">
+          <div className="px-5 py-4 border-b border-slate-700 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <h2 className="font-semibold text-base flex items-center gap-2">
               <ArrowRightLeft size={18} className="text-primary" />
               Historial de Movimientos
             </h2>
@@ -243,7 +244,13 @@ export default function MovimientosReportScreen({ onNavigate }) {
                   <option value="Salida">Salida</option>
                 </select>
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
-                  <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                  <svg
+                    className="fill-current h-4 w-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                  </svg>
                 </div>
               </div>
             </div>
@@ -255,7 +262,7 @@ export default function MovimientosReportScreen({ onNavigate }) {
               <thead>
                 <tr className="bg-slate-900/30 text-[11px] uppercase tracking-wider font-semibold text-slate-500 border-b border-slate-700/50">
                   <th
-                    className="px-6 py-4 cursor-pointer hover:text-primary transition-colors"
+                    className="px-4 py-2.5 cursor-pointer hover:text-primary transition-colors"
                     onClick={toggleSort}
                   >
                     <div className="flex items-center gap-2">
@@ -267,10 +274,10 @@ export default function MovimientosReportScreen({ onNavigate }) {
                       )}
                     </div>
                   </th>
-                  <th className="px-6 py-4">Fecha & Hora</th>
-                  <th className="px-6 py-4">Producto</th>
-                  <th className="px-6 py-4">Usuario</th>
-                  <th className="px-6 py-4 text-center">Tipo</th>
+                  <th className="px-4 py-2.5">Fecha & Hora</th>
+                  <th className="px-4 py-2.5">Producto</th>
+                  <th className="px-4 py-2.5">Usuario</th>
+                  <th className="px-4 py-2.5 text-center">Tipo</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-700/30">
