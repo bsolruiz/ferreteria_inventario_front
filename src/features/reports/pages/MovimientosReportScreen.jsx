@@ -216,6 +216,7 @@ export default function MovimientosReportScreen({ onNavigate }) {
                 <input
                   type="date"
                   value={startDate}
+                  max={endDate}
                   onChange={(e) => handleStartDateChange(e.target.value)}
                   className="bg-transparent border-none outline-none text-sm text-slate-200 [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert-[0.8] cursor-pointer"
                 />
@@ -227,6 +228,7 @@ export default function MovimientosReportScreen({ onNavigate }) {
                 <input
                   type="date"
                   value={endDate}
+                  min={startDate}
                   onChange={(e) => handleEndDateChange(e.target.value)}
                   className="bg-transparent border-none outline-none text-sm text-slate-200 [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert-[0.8] cursor-pointer"
                 />
