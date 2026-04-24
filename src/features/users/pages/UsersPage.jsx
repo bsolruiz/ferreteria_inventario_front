@@ -37,9 +37,10 @@ export default function UsersPage({ onNavigate, currentUser }) {  // ← Cambiad
 
   // métricas
   const totalUsuarios = usuarios.length;
-  const activos = usuarios.filter(u => u.estado === true).length;
-  const inactivos = usuarios.filter(u => u.estado === false).length;
+  const activos = usuarios.filter(u => u.estado === 1 || u.estado === true).length;
+  const inactivos = usuarios.filter(u => u.estado === 0 || u.estado === false).length;
   const admins = usuarios.filter(u => u.rolId === 1).length;
+  const encargados = usuarios.filter(u => u.rolId === 2).length;
 
   const handleActualizado = (usuarioActualizado) => {
     setUsuarios(prev =>
@@ -90,11 +91,45 @@ export default function UsersPage({ onNavigate, currentUser }) {  // ← Cambiad
           </div>
 
           {/* STATS */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <StatCard icono="👤" label="Total Usuarios" valor={totalUsuarios} badge="En sistema" colorBadge="bg-slate-700 text-slate-300" />
-            <StatCard icono="🟢" label="Activos" valor={activos} badge="Habilitados" colorBadge="bg-green-500/10 text-green-400" />
-            <StatCard icono="🔴" label="Inactivos" valor={inactivos} badge="Deshabilitados" colorBadge="bg-red-500/10 text-red-400" />
-            <StatCard icono="🛡️" label="Admins" valor={admins} badge="Privilegios" colorBadge="bg-purple-500/10 text-purple-400" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            <StatCard
+              icono="👤"
+              label="Total Usuarios"
+              valor={totalUsuarios}
+              badge="En sistema"
+              colorBadge="bg-slate-700 text-slate-300"
+            />
+
+            <StatCard
+              icono="🛡️"
+              label="Admins"
+              valor={admins}
+              badge="Privilegios"
+              colorBadge="bg-purple-500/10 text-purple-400"
+            />
+
+            <StatCard
+              icono="👔"
+              label="Encargados"
+              valor={encargados}
+              badge="Gestores"
+              colorBadge="bg-blue-500/10 text-blue-400"
+            />
+             <StatCard
+              icono="🟢"
+              label="Activos"
+              valor={activos}
+              badge="Habilitados"
+              colorBadge="bg-green-500/10 text-green-400"
+            />
+
+            <StatCard
+              icono="🔴"
+              label="Inactivos"
+              valor={inactivos}
+              badge="Deshabilitados"
+              colorBadge="bg-red-500/10 text-red-400"
+            />
           </div>
 
           {/* TABLA */}
