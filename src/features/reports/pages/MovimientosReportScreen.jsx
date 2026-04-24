@@ -21,6 +21,7 @@ const EXPORT_COLUMNS = [
   { key: "fechaRegistro", header: "Fecha" },
   { key: "tipoMovimiento", header: "Tipo" },
   { key: "productoNombre", header: "Producto" },
+  { key: "cantidad", header: "Cantidad" },
   { key: "motivo", header: "Motivo" },
   { key: "usuarioNombre", header: "Usuario" },
 ];
@@ -121,6 +122,11 @@ const MovementRow = memo(({ movement, idx }) => (
       </span>
     </td>
     <td className="px-4 py-2.5 text-center">
+      <span className="text-sm font-semibold text-white bg-slate-700/50 px-3 py-1 rounded-full">
+        {movement.cantidad ?? 0}
+      </span>
+    </td>
+    <td className="px-4 py-2.5 text-center">
       <MovementBadge tipo={movement.tipoMovimiento} />
     </td>
   </Motion.tr>
@@ -128,7 +134,7 @@ const MovementRow = memo(({ movement, idx }) => (
 MovementRow.displayName = "MovementRow";
 
 // --- Componente principal ---
-export default function MovimientosReportScreen({ onNavigate }) {
+export default function MovimientosReportScreen({ onNavigate, currentUser }) {
   const {
     loading,
     searchTerm,
@@ -160,7 +166,11 @@ export default function MovimientosReportScreen({ onNavigate }) {
 
   return (
     <div className="min-h-screen bg-[var(--color-background-dark)]">
-      <Navbar active="reports" onNavigate={onNavigate} />
+      <Navbar
+        active="reports"
+        onNavigate={onNavigate}
+        currentUser={currentUser}
+      />
 
       <main className="max-w-7xl mx-auto px-4 py-6">
         {/* Title & Actions */}
@@ -279,6 +289,7 @@ export default function MovimientosReportScreen({ onNavigate }) {
                   <th className="px-4 py-2.5">Fecha & Hora</th>
                   <th className="px-4 py-2.5">Producto</th>
                   <th className="px-4 py-2.5">Usuario</th>
+                  <th className="px-4 py-2.5 text-center">Cantidad</th>
                   <th className="px-4 py-2.5 text-center">Tipo</th>
                 </tr>
               </thead>
@@ -286,7 +297,7 @@ export default function MovimientosReportScreen({ onNavigate }) {
                 {loading ? (
                   <tr>
                     <td
-                      colSpan={5}
+                      colSpan={6}
                       className="px-6 py-8 text-center text-slate-500"
                     >
                       Cargando movimientos...
@@ -295,7 +306,7 @@ export default function MovimientosReportScreen({ onNavigate }) {
                 ) : currentItems.length === 0 ? (
                   <tr>
                     <td
-                      colSpan={5}
+                      colSpan={6}
                       className="px-6 py-8 text-center text-slate-500"
                     >
                       No se encontraron movimientos.

@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import { listarUsuarios } from './usuarioService';
-import UsersTable from '../components/UsersTable';
-import Navbar from '../../../components/Navbar';
+import { useState, useEffect } from "react";
+import { listarUsuarios } from "./usuarioService";
+import UsersTable from "../components/UsersTable";
+import Navbar from "../../../components/Navbar";
 
 function StatCard({ icono, label, valor, colorBadge, badge }) {
   return (
@@ -18,16 +18,17 @@ function StatCard({ icono, label, valor, colorBadge, badge }) {
   );
 }
 
-export default function UsersPage({ onNavigate, currentUser }) {  // ← Cambiado a onNavigate
+export default function UsersPage({ onNavigate, currentUser }) {
+  // ← Cambiado a onNavigate
   const [usuarios, setUsuarios] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const cargarUsuarios = () => {
     setLoading(true);
     listarUsuarios()
       .then(setUsuarios)
-      .catch(() => setError('No se pudo conectar con el servidor'))
+      .catch(() => setError("No se pudo conectar con el servidor"))
       .finally(() => setLoading(false));
   };
 
@@ -37,31 +38,39 @@ export default function UsersPage({ onNavigate, currentUser }) {  // ← Cambiad
 
   // métricas
   const totalUsuarios = usuarios.length;
-  const activos = usuarios.filter(u => u.estado === 1 || u.estado === true).length;
-  const inactivos = usuarios.filter(u => u.estado === 0 || u.estado === false).length;
-  const admins = usuarios.filter(u => u.rolId === 1).length;
-  const encargados = usuarios.filter(u => u.rolId === 2).length;
+  const activos = usuarios.filter(
+    (u) => u.estado === 1 || u.estado === true,
+  ).length;
+  const inactivos = usuarios.filter(
+    (u) => u.estado === 0 || u.estado === false,
+  ).length;
+  const admins = usuarios.filter((u) => u.rolId === 1).length;
+  const encargados = usuarios.filter((u) => u.rolId === 2).length;
 
   const handleActualizado = (usuarioActualizado) => {
-    setUsuarios(prev =>
-      prev.map(u =>
-        u.idUsuario === usuarioActualizado.idUsuario ? usuarioActualizado : u
-      )
+    setUsuarios((prev) =>
+      prev.map((u) =>
+        u.idUsuario === usuarioActualizado.idUsuario ? usuarioActualizado : u,
+      ),
     );
   };
 
   const handleEliminado = (id) => {
-    setUsuarios(prev => prev.filter(u => u.idUsuario !== id));
+    setUsuarios((prev) =>
+      prev.map((u) => (u.idUsuario === id ? { ...u, estado: 0 } : u))
+    );
   };
 
   return (
     <div className="min-h-screen bg-[var(--color-background-dark)]">
-
-      <Navbar active="users" onNavigate={onNavigate} currentUser={currentUser} />  {/* ← active="users" */}
-
+      <Navbar
+        active="users"
+        onNavigate={onNavigate}
+        currentUser={currentUser}
+      />{" "}
+      {/* ← active="users" */}
       <main className="p-4 sm:p-8">
         <div className="max-w-7xl mx-auto flex flex-col gap-8">
-
           {/* HEADER */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
@@ -82,7 +91,7 @@ export default function UsersPage({ onNavigate, currentUser }) {  // ← Cambiad
               </button>
 
               <button
-                onClick={() => onNavigate('crear-usuario')}  // ← usa onNavigate
+                onClick={() => onNavigate("crear-usuario")} // ← usa onNavigate
                 className="px-4 py-2 bg-[var(--color-primary)] text-white text-sm rounded-lg hover:bg-blue-600"
               >
                 + Crear Usuario
@@ -115,7 +124,7 @@ export default function UsersPage({ onNavigate, currentUser }) {  // ← Cambiad
               badge="Gestores"
               colorBadge="bg-blue-500/10 text-blue-400"
             />
-             <StatCard
+            <StatCard
               icono="🟢"
               label="Activos"
               valor={activos}
@@ -144,9 +153,9 @@ export default function UsersPage({ onNavigate, currentUser }) {  // ← Cambiad
               usuarios={usuarios}
               onActualizado={handleActualizado}
               onEliminado={handleEliminado}
+              currentUser={currentUser}
             />
           )}
-
         </div>
       </main>
     </div>
