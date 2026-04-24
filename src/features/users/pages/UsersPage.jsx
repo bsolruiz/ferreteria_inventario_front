@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { listarUsuarios } from "./usuarioService";
+import { listarUsuarios } from "../../../api/usuarioService";
 import UsersTable from "../components/UsersTable";
 import Navbar from "../../../components/Navbar";
 

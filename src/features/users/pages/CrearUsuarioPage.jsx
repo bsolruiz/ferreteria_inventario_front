@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { crearUsuario, listarRoles } from "../pages/usuarioService";
+import { crearUsuario, listarRoles } from "../../../api/usuarioService";
 import { toast } from "react-hot-toast";
 import Navbar from "../../../components/Navbar";
 

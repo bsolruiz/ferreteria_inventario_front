@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { actualizarUsuario, listarRoles } from "../pages/usuarioService";
+import { actualizarUsuario, listarRoles } from "../../../api/usuarioService";
 import { toast } from "react-hot-toast";
 
 export default function EditarUsuarioModal({

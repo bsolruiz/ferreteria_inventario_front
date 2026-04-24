@@ -1,4 +1,4 @@
-import api from '../../../api/axiosConfig';
+import api from './axiosConfig';
 
 export const crearUsuario = (dto) =>
   api.post('/api/usuarios', dto).then(r => r.data);
@@ -17,7 +17,6 @@ export const listarUsuarios = () =>
 
 export const listarRoles = async () => {
   try {
-    
       const response = await api.get('/api/roles');
       console.log("Respuesta completa:", response);
       console.log("Datos de roles:", response.data);
@@ -28,5 +27,3 @@ export const listarRoles = async () => {
       throw error;
   }
 };
-
-

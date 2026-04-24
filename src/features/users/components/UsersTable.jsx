@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { eliminarUsuario, actualizarUsuario } from "../pages/usuarioService";
+import { eliminarUsuario, actualizarUsuario } from "../../../api/usuarioService";
 import { toast } from "react-hot-toast";
 import EditarUsuarioModal from "./EditarUsuarioModal";
 import ConfirmDeleteUsuarioModal from "./ConfirmDeleteModal";

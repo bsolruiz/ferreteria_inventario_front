@@ -104,10 +104,12 @@ function MovementRow({ producto, onUpdateQty, onRemove, tipo }) {
   };
 
   const handleChange = (value) => {
-    const val = parseInt(value) || 0;
-    if (val < 1) {
-      setQty(1);
-      onUpdateQty(producto.idProducto, 1);
+    if (value === "") {
+      setQty("");
+      return;
+    }
+    const val = parseInt(value, 10);
+    if (isNaN(val) || val < 1) {
       return;
     }
     if (tipo === "SALIDA" && val > producto.stockActual) {
@@ -117,6 +119,13 @@ function MovementRow({ producto, onUpdateQty, onRemove, tipo }) {
     }
     setQty(val);
     onUpdateQty(producto.idProducto, val);
+  };
+
+  const handleBlur = () => {
+    if (qty === "" || qty < 1) {
+      setQty(1);
+      onUpdateQty(producto.idProducto, 1);
+    }
   };
 
   return (
@@ -144,6 +153,8 @@ function MovementRow({ producto, onUpdateQty, onRemove, tipo }) {
             type="number"
             value={qty}
             onChange={(e) => handleChange(e.target.value)}
+            onFocus={(e) => e.target.select()}
+            onBlur={handleBlur}
             className="w-16 bg-slate-800 border border-slate-700 rounded-lg px-2 py-2 text-center font-bold text-white focus:ring-2 focus:ring-primary outline-none"
             min="1"
             max={tipo === "SALIDA" ? producto.stockActual : undefined}
