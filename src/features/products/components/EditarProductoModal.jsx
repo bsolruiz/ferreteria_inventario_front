@@ -3,6 +3,7 @@ import { actualizarProducto, listarCategorias } from '../pages/productoService';
 import { toast } from 'react-hot-toast';
 
 export default function EditarProductoModal({ producto, onClose, onGuardado }) {
+
   const [form, setForm] = useState({
     nombreProducto: producto.nombreProducto,
     descripcion: producto.descripcion,
