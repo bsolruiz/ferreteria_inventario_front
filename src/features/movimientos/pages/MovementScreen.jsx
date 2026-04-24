@@ -342,7 +342,7 @@ export default function MovementScreen({ onNavigate, currentUser }) {
                 className="rotate-180 group-hover:-translate-x-1 transition-transform"
                 size={18}
               />
-              Volver al Dashboard
+              Volver al Inventario
             </button>
           </div>
 
