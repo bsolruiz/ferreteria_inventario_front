@@ -40,21 +40,16 @@ export function useMovimientos() {
       });
     }
 
-    if (startDate || endDate) {
+    if (startDate && endDate) {
       filtered = filtered.filter((m) => {
         if (!m.fechaRegistro) return false;
         const movDate = new Date(m.fechaRegistro);
         movDate.setHours(0, 0, 0, 0);
 
-        if (startDate) {
-          const start = new Date(startDate + "T00:00:00");
-          if (movDate < start) return false;
-        }
-        if (endDate) {
-          const end = new Date(endDate + "T00:00:00");
-          if (movDate > end) return false;
-        }
-        return true;
+        const start = new Date(startDate + "T00:00:00");
+        const end = new Date(endDate + "T00:00:00");
+
+        return movDate >= start && movDate <= end;
       });
     }
 
@@ -97,13 +92,19 @@ export function useMovimientos() {
 
   const handleStartDateChange = useCallback((value) => {
     setStartDate(value);
+    if (endDate && value > endDate && value !== "") {
+      setEndDate(value);
+    }
     setCurrentPage(1);
-  }, []);
+  }, [endDate]);
 
   const handleEndDateChange = useCallback((value) => {
     setEndDate(value);
+    if (startDate && value < startDate && value !== "") {
+      setStartDate(value);
+    }
     setCurrentPage(1);
-  }, []);
+  }, [startDate]);
 
   const toggleSort = useCallback(() => {
     setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
