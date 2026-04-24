@@ -9,7 +9,7 @@ import { toast } from 'react-hot-toast';
 const ITEMS_POR_PAGINA = 10;
 
 function StockBar({ cantidad }) {
-  const nivel = cantidad === 0 ? 'sin-stock' : cantidad < 10 ? 'bajo' : 'ok';
+  const nivel = cantidad === 0 ? 'sin-stock' : cantidad <= 10 ? 'bajo' : 'ok';
   const color = nivel === 'ok' ? 'bg-green-500' : nivel === 'bajo' ? 'bg-orange-500' : 'bg-red-500';
   const colorTexto = nivel === 'ok' ? 'text-slate-300' : nivel === 'bajo' ? 'text-orange-400' : 'text-red-400';
   const ancho = Math.min(Math.max((cantidad / 100) * 100, 0), 100);
@@ -192,7 +192,7 @@ export default function ProductosTable({ productos, onActualizado, onEliminado }
                 </tr>
               ) : (
                 productosPagina.map((p) => {
-                  const estado = p.cantidad === 0 ? 'sin-stock' : p.cantidad < 10 ? 'bajo' : 'activo';
+                  const estado = p.cantidad === 0 ? 'sin-stock' : p.cantidad <= 10 ? 'bajo' : 'activo';
                   return (
                     <tr key={p.idProducto} className="hover:bg-slate-800/40 transition-colors">
                       <td className="px-6 py-4">

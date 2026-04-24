@@ -75,7 +75,7 @@ export default function ReportsScreen({ onNavigate, currentUser }) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <ReportCard
                 title="Mercancía Existente"
-                desc="Listado completo de productos en stock"
+                desc="Listado completo de productos"
                 icon={<Icons.FileText />}
                 onDownload={() =>
                   handleDownload(

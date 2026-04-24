@@ -32,7 +32,7 @@ export default function InventarioPage({ onNavegar, currentUser }) {
   useEffect(() => { cargarProductos(); }, []);
 
   const totalProductos = productos.length;
-  const stockBajo = productos.filter(p => p.cantidad > 0 && p.cantidad < 10).length;
+  const stockBajo = productos.filter(p => p.cantidad > 0 && p.cantidad <= 10).length;
   const sinStock = productos.filter(p => p.cantidad === 0).length;
   const valorTotal = productos.reduce((acc, p) => acc + (Number(p.precio) * (p.cantidad ?? 0)), 0);
 
@@ -90,7 +90,7 @@ export default function InventarioPage({ onNavegar, currentUser }) {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <StatCard icono="📦" label="Total Productos" valor={totalProductos} badge="En sistema" colorBadge="bg-slate-700 text-slate-300" />
-            <StatCard icono="⚠️" label="Stock Bajo" valor={stockBajo} badge="< 10 uds." colorBadge="bg-orange-500/10 text-orange-400" />
+            <StatCard icono="⚠️" label="Stock Bajo" valor={stockBajo} badge="<= 10 uds." colorBadge="bg-orange-500/10 text-orange-400" />
             <StatCard icono="🚫" label="Sin Stock" valor={sinStock} badge="Agotados" colorBadge="bg-red-500/10 text-red-400" />
             <StatCard icono="💰" label="Valor Total" valor={`$${valorTotal.toLocaleString('es-CO')}`} badge="Inventario" colorBadge="bg-green-500/10 text-green-400" />
           </div>
