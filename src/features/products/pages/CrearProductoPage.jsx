@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { crearProducto, listarCategorias } from '../pages/productoService';
 import { toast } from 'react-hot-toast';
-
-export default function CrearProductoPage({ onNavegar }) {
+import Navbar from "../../../components/Navbar";
+export default function CrearProductoPage({ onNavegar, currentUser  }) {
   const [form, setForm] = useState({
     nombreProducto: '',
     descripcion: '',
@@ -48,19 +48,14 @@ export default function CrearProductoPage({ onNavegar }) {
 
   return (
     <div className="min-h-screen bg-[var(--color-background-dark)]">
-
+ <Navbar
+        active="inventario"
+        onNavigate={onNavegar}
+        currentUser={currentUser}
+      />
       {/* Header simple */}
-      <div className="border-b border-slate-800 px-8 py-4 flex items-center gap-4">
-        <button
-          onClick={() => onNavegar('inventario')}
-          className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="15 18 9 12 15 6"/>
-          </svg>
-          Volver al inventario
-        </button>
-      </div>
 
+      
       <main className="p-4 sm:p-8">
         <div className="max-w-2xl mx-auto">
           <div className="mb-8">
