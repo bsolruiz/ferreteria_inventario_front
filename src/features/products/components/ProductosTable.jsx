@@ -2,7 +2,6 @@ import { useState, useMemo } from 'react';
 import { eliminarProducto } from '../pages/productoService';
 import EditarProductoModal from './EditarProductoModal';
 import ConfirmDeleteModal from './ConfirmDeleteModal';
-import ErrorModal from './ErrorModal';
 import { Search, ChevronLeft, ChevronRight, Filter } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
@@ -28,46 +27,35 @@ export default function ProductosTable({ productos, onActualizado, onEliminado }
   const [productoEditando, setProductoEditando]   = useState(null);
   const [productoAEliminar, setProductoAEliminar] = useState(null);
   const [eliminando, setEliminando]               = useState(false);
-  const [errorEliminar, setErrorEliminar]         = useState('');
   const [busqueda, setBusqueda]                   = useState('');
   const [categoriaFiltro, setCategoriaFiltro]     = useState('Todas');
   const [paginaActual, setPaginaActual]           = useState(1);
 
-  // Categorías únicas extraídas de los productos
   const categorias = useMemo(() => {
     const unicas = [...new Set(productos.map(p => p.categoriaNombre))].filter(Boolean);
     return ['Todas', ...unicas];
   }, [productos]);
 
-  // Filtrado por nombre y categoría
   const productosFiltrados = useMemo(() => {
     return productos.filter(p => {
-      const coincideNombre = p.nombreProducto
-        .toLowerCase()
-        .includes(busqueda.toLowerCase());
+      const q = busqueda.toLowerCase();
+      const coincide = p.nombreProducto.toLowerCase().includes(q) ||
+                       p.codigoBarras?.toLowerCase().includes(q);
       const coincideCategoria =
         categoriaFiltro === 'Todas' || p.categoriaNombre === categoriaFiltro;
-      return coincideNombre && coincideCategoria;
+      return coincide && coincideCategoria;
     });
   }, [productos, busqueda, categoriaFiltro]);
 
-  // Paginación
-  const totalPaginas = Math.max(1, Math.ceil(productosFiltrados.length / ITEMS_POR_PAGINA));
-  const paginaSegura = Math.min(paginaActual, totalPaginas);
-  const inicio = (paginaSegura - 1) * ITEMS_POR_PAGINA;
+  const totalPaginas  = Math.max(1, Math.ceil(productosFiltrados.length / ITEMS_POR_PAGINA));
+  const paginaSegura  = Math.min(paginaActual, totalPaginas);
+  const inicio        = (paginaSegura - 1) * ITEMS_POR_PAGINA;
   const productosPagina = productosFiltrados.slice(inicio, inicio + ITEMS_POR_PAGINA);
   const visibleInicio = productosFiltrados.length === 0 ? 0 : inicio + 1;
-  const visibleFin = Math.min(inicio + ITEMS_POR_PAGINA, productosFiltrados.length);
+  const visibleFin    = Math.min(inicio + ITEMS_POR_PAGINA, productosFiltrados.length);
 
-  const handleBusqueda = (valor) => {
-    setBusqueda(valor);
-    setPaginaActual(1);
-  };
-
-  const handleCategoria = (valor) => {
-    setCategoriaFiltro(valor);
-    setPaginaActual(1);
-  };
+  const handleBusqueda = (valor) => { setBusqueda(valor); setPaginaActual(1); };
+  const handleCategoria = (valor) => { setCategoriaFiltro(valor); setPaginaActual(1); };
 
   const handleEliminar = async () => {
     if (!productoAEliminar) return;
@@ -78,10 +66,8 @@ export default function ProductosTable({ productos, onActualizado, onEliminado }
       onEliminado(productoAEliminar.idProducto);
       setProductoAEliminar(null);
     } catch (err) {
-      const errorMsg = err.response?.data?.mensaje || 'Error al eliminar el producto';
-      toast.error(errorMsg);
+      toast.error(err.response?.data?.mensaje || 'Error al eliminar el producto');
       setProductoAEliminar(null);
-      setErrorEliminar(errorMsg);
     } finally {
       setEliminando(false);
     }
@@ -101,7 +87,6 @@ export default function ProductosTable({ productos, onActualizado, onEliminado }
           onGuardado={handleGuardado}
         />
       )}
-
       {productoAEliminar && (
         <ConfirmDeleteModal
           producto={productoAEliminar}
@@ -111,43 +96,28 @@ export default function ProductosTable({ productos, onActualizado, onEliminado }
         />
       )}
 
-      {errorEliminar && (
-        <ErrorModal
-          mensaje={errorEliminar}
-          onCerrar={() => setErrorEliminar('')}
-        />
-      )}
-
       <div className="bg-[var(--color-surface-dark)] border border-slate-800 rounded-xl overflow-hidden shadow-sm">
 
-        {/* Header con búsqueda y filtro */}
+        {/* Header */}
         <div className="px-6 py-4 border-b border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <h3 className="text-sm font-semibold text-slate-300">
             {productosFiltrados.length} producto{productosFiltrados.length !== 1 ? 's' : ''} encontrado{productosFiltrados.length !== 1 ? 's' : ''}
           </h3>
           <div className="flex flex-wrap items-center gap-3">
 
-            {/* Búsqueda por nombre */}
             <div className="relative group">
-              <Search
-                size={16}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-[var(--color-primary)] transition-colors"
-              />
+              <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-[var(--color-primary)] transition-colors" />
               <input
                 type="text"
-                placeholder="Buscar producto..."
+                placeholder="Buscar por nombre o código de barras..."
                 value={busqueda}
                 onChange={(e) => handleBusqueda(e.target.value)}
-                className="bg-slate-900/50 border border-slate-700 rounded-lg py-2 pl-9 pr-4 text-sm focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]/50 focus:border-[var(--color-primary)]/50 w-full sm:w-56 transition-all text-slate-200 placeholder-slate-500"
+                className="bg-slate-900/50 border border-slate-700 rounded-lg py-2 pl-9 pr-4 text-sm focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]/50 focus:border-[var(--color-primary)]/50 w-full sm:w-72 transition-all text-slate-200 placeholder-slate-500"
               />
             </div>
 
-            {/* Filtro por categoría */}
             <div className="relative">
-              <Filter
-                size={14}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none"
-              />
+              <Filter size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none" />
               <select
                 value={categoriaFiltro}
                 onChange={(e) => handleCategoria(e.target.value)}
@@ -173,7 +143,7 @@ export default function ProductosTable({ productos, onActualizado, onEliminado }
             <thead>
               <tr className="bg-[var(--color-background-dark)] border-b border-slate-800 text-xs uppercase text-slate-500 font-semibold tracking-wider">
                 <th className="px-6 py-4">Producto</th>
-                <th className="px-6 py-4">ID</th>
+                <th className="px-6 py-4">Cód. Barras</th>
                 <th className="px-6 py-4">Categoría</th>
                 <th className="px-6 py-4">Stock</th>
                 <th className="px-6 py-4">Precio</th>
@@ -196,10 +166,19 @@ export default function ProductosTable({ productos, onActualizado, onEliminado }
                   return (
                     <tr key={p.idProducto} className="hover:bg-slate-800/40 transition-colors">
                       <td className="px-6 py-4">
-                        <p className="text-sm font-medium text-white">{p.nombreProducto}</p>
-                        <p className="text-xs text-slate-500 mt-0.5 line-clamp-1">{p.descripcion}</p>
+                        <div className="flex items-center gap-2">
+                          <div>
+                            <p className="text-sm font-medium text-white">{p.nombreProducto}</p>
+                            <p className="text-xs text-slate-500 mt-0.5 line-clamp-1">{p.descripcion}</p>
+                          </div>
+                          {p.tieneMovimientos && (
+                            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-slate-700 text-slate-400 border border-slate-600 shrink-0" title="Tiene movimientos registrados">
+                              MOV
+                            </span>
+                          )}
+                        </div>
                       </td>
-                      <td className="px-6 py-4 text-sm text-slate-400 font-mono">#{p.idProducto}</td>
+                      <td className="px-6 py-4 text-sm text-slate-400 font-mono">{p.codigoBarras}</td>
                       <td className="px-6 py-4">
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20">
                           {p.categoriaNombre}
@@ -224,21 +203,15 @@ export default function ProductosTable({ productos, onActualizado, onEliminado }
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center justify-end gap-1">
-                          {/* Editar */}
-                          <button
-                            onClick={() => setProductoEditando(p)}
-                            className="p-2 rounded-lg text-slate-400 hover:text-[var(--color-primary)] hover:bg-slate-700 transition-colors"
-                            title="Editar">
+                          <button onClick={() => setProductoEditando(p)}
+                            className="p-2 rounded-lg text-slate-400 hover:text-[var(--color-primary)] hover:bg-slate-700 transition-colors" title="Editar">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
                               <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
                             </svg>
                           </button>
-                          {/* Eliminar */}
-                          <button
-                            onClick={() => setProductoAEliminar(p)}
-                            className="p-2 rounded-lg text-slate-400 hover:text-red-400 hover:bg-slate-700 transition-colors"
-                            title="Eliminar">
+                          <button onClick={() => setProductoAEliminar(p)}
+                            className="p-2 rounded-lg text-slate-400 hover:text-red-400 hover:bg-slate-700 transition-colors" title="Eliminar">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                               <polyline points="3 6 5 6 21 6"/>
                               <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
@@ -256,21 +229,14 @@ export default function ProductosTable({ productos, onActualizado, onEliminado }
           </table>
         </div>
 
-        {/* Footer paginación */}
+        {/* Paginación */}
         <div className="px-6 py-4 border-t border-slate-800 bg-slate-900/20 flex flex-col sm:flex-row items-center justify-between gap-3">
           <span className="text-xs text-slate-500">
-            Mostrando{' '}
-            <span className="text-slate-300 font-medium">{visibleInicio}–{visibleFin}</span>
-            {' '}de{' '}
-            <span className="text-slate-300 font-medium">{productosFiltrados.length}</span>
-            {' '}productos
+            Mostrando <span className="text-slate-300 font-medium">{visibleInicio}–{visibleFin}</span> de <span className="text-slate-300 font-medium">{productosFiltrados.length}</span> productos
           </span>
           <div className="flex items-center gap-2">
-            <button
-              onClick={() => setPaginaActual(p => Math.max(1, p - 1))}
-              disabled={paginaSegura === 1}
-              className="p-2 rounded-lg border border-slate-700 text-slate-400 hover:text-white hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
-            >
+            <button onClick={() => setPaginaActual(p => Math.max(1, p - 1))} disabled={paginaSegura === 1}
+              className="p-2 rounded-lg border border-slate-700 text-slate-400 hover:text-white hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all">
               <ChevronLeft size={16} />
             </button>
 
@@ -285,25 +251,19 @@ export default function ProductosTable({ productos, onActualizado, onEliminado }
                 item === '...' ? (
                   <span key={`dots-${idx}`} className="text-slate-500 px-1">...</span>
                 ) : (
-                  <button
-                    key={item}
-                    onClick={() => setPaginaActual(item)}
+                  <button key={item} onClick={() => setPaginaActual(item)}
                     className={`w-8 h-8 rounded-lg text-sm font-medium transition-all
                       ${paginaSegura === item
                         ? 'bg-[var(--color-primary)] text-white shadow-lg shadow-blue-500/20'
-                        : 'border border-slate-700 text-slate-400 hover:text-white hover:bg-slate-700'}`}
-                  >
+                        : 'border border-slate-700 text-slate-400 hover:text-white hover:bg-slate-700'}`}>
                     {item}
                   </button>
                 )
               )
             }
 
-            <button
-              onClick={() => setPaginaActual(p => Math.min(totalPaginas, p + 1))}
-              disabled={paginaSegura === totalPaginas}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-slate-600 bg-slate-700 text-slate-100 hover:bg-slate-600 disabled:opacity-40 disabled:cursor-not-allowed text-sm font-medium transition-all"
-            >
+            <button onClick={() => setPaginaActual(p => Math.min(totalPaginas, p + 1))} disabled={paginaSegura === totalPaginas}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-slate-600 bg-slate-700 text-slate-100 hover:bg-slate-600 disabled:opacity-40 disabled:cursor-not-allowed text-sm font-medium transition-all">
               Siguiente <ChevronRight size={14} />
             </button>
           </div>
