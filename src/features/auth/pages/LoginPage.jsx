@@ -1,42 +1,22 @@
-import { useState } from 'react';
 import { KeyRound } from 'lucide-react';
 import warehouseBg from '../../../assets/Image+Blur.png';
-import { loginUsuario } from '../services/authService';
+import { useLogin } from '../hooks/useLogin';
 
 export default function LoginPage({ onLogin }) {
-  const [correo, setCorreo] = useState('');
-  const [contrasena, setContrasena] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
-    try {
-      const usuario = await loginUsuario(correo, contrasena);
-      onLogin(usuario); // sube { idUsuario, nombres, correo, rolNombre } a App
-    } catch (err) {
-      setError(err.response?.data?.mensaje || 'Error al conectar con el servidor');
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { correo, setCorreo, contrasena, setContrasena, error, loading, handleSubmit } =
+    useLogin(onLogin);
 
   return (
     <div className="relative isolate flex min-h-screen w-full items-center justify-center overflow-hidden bg-background-dark font-sans">
 
-      {/* FONDO */}
       <div className="absolute inset-0 z-[-1]">
         <div className="absolute inset-0 bg-slate-950/65 backdrop-blur-[2px]"></div>
         <img src={warehouseBg} alt="warehouse background" className="h-full w-full object-cover" />
       </div>
 
-      {/* TARJETA */}
       <div className="relative w-full max-w-[440px] px-4">
         <div className="flex flex-col items-center rounded-2xl border border-white/10 bg-surface-dark/90 p-10 shadow-2xl backdrop-blur-xl">
 
-          {/* Ícono */}
           <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-slate-800/50 text-primary">
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
@@ -47,11 +27,13 @@ export default function LoginPage({ onLogin }) {
           <h2 className="mb-2 text-center text-3xl font-bold text-white">Bienvenido</h2>
           <p className="mb-8 text-center text-slate-400 text-sm">Ingresa tus credenciales para continuar.</p>
 
-          <form className="w-full space-y-5" onSubmit={handleSubmit}>
+          <form className="w-full space-y-5" onSubmit={handleSubmit} noValidate>
 
             {/* Correo */}
             <div className="space-y-2">
-              <label className="text-sm font-medium text-slate-300">Correo</label>
+              <label className="text-sm font-medium text-slate-300">
+                Correo <span className="text-red-400">*</span>
+              </label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -61,7 +43,7 @@ export default function LoginPage({ onLogin }) {
                 </span>
                 <input
                   type="text"
-                  placeholder="Ingresa tu correo"
+                  placeholder="usuario@dominio.com"
                   value={correo}
                   onChange={(e) => setCorreo(e.target.value)}
                   className="w-full rounded-lg border border-border-dark bg-surface-dark py-3 pl-10 pr-4 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
@@ -71,7 +53,9 @@ export default function LoginPage({ onLogin }) {
 
             {/* Contraseña */}
             <div className="space-y-2">
-              <label className="text-sm font-medium text-slate-300">Contraseña</label>
+              <label className="text-sm font-medium text-slate-300">
+                Contraseña <span className="text-red-400">*</span>
+              </label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
                   <KeyRound size={20} strokeWidth={2.5} className="rotate-[-45deg]" />
@@ -93,7 +77,6 @@ export default function LoginPage({ onLogin }) {
               </div>
             )}
 
-            {/* Botón */}
             <button
               type="submit"
               disabled={loading}

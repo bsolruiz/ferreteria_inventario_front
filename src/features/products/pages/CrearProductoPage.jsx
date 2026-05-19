@@ -31,7 +31,7 @@ export default function CrearProductoPage({ onNavegar, currentUser }) {
                 <label className="block text-sm font-medium text-slate-300 mb-1.5">Descripción</label>
                 <textarea name="descripcion" value={form.descripcion} onChange={handleChange}
                   className={`${inputClass} resize-none`} rows={3}
-                  placeholder="Detalles del producto..." />
+                  placeholder="Detalles del producto..." required/>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
