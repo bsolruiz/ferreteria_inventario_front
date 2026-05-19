@@ -1,61 +1,16 @@
-import { useState, useEffect } from 'react';
-import { crearProducto, listarCategorias } from '../pages/productoService';
-import { toast } from 'react-hot-toast';
 import Navbar from "../../../components/Navbar";
-export default function CrearProductoPage({ onNavegar, currentUser  }) {
-  const [form, setForm] = useState({
-    nombreProducto: '',
-    descripcion: '',
-    precio: '',
-    codigoBarras: '',
-    categoriaId: '',
-  });
-  const [categorias, setCategorias] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+import { useCrearProducto } from '../hooks/useCrearProducto';
 
-  useEffect(() => {
-    listarCategorias().then(setCategorias).catch(() => {});
-  }, []);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
-    try {
-      await crearProducto({
-        ...form,
-        precio: parseFloat(form.precio),
-        categoriaId: parseInt(form.categoriaId),
-      });
-      toast.success('Producto creado correctamente');
-      onNavegar('inventario');
-    } catch (err) {
-      const errorMsg = err.response?.data?.mensaje || 'Error al crear el producto';
-      toast.error(errorMsg);
-      setError(errorMsg);
-    } finally {
-      setLoading(false);
-    }
-  };
+export default function CrearProductoPage({ onNavegar, currentUser }) {
+  const { form, categorias, loading, error, handleChange, handleSubmit } =
+    useCrearProducto(onNavegar);
 
   const inputClass = "w-full rounded-lg border border-[var(--color-border-dark)] bg-[var(--color-background-dark)] px-4 py-3 text-sm text-white placeholder-slate-500 focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] outline-none transition-all";
 
   return (
     <div className="min-h-screen bg-[var(--color-background-dark)]">
- <Navbar
-        active="inventario"
-        onNavigate={onNavegar}
-        currentUser={currentUser}
-      />
-      {/* Header simple */}
+      <Navbar active="inventario" onNavigate={onNavegar} currentUser={currentUser} />
 
-      
       <main className="p-4 sm:p-8">
         <div className="max-w-2xl mx-auto">
           <div className="mb-8">
@@ -125,7 +80,9 @@ export default function CrearProductoPage({ onNavegar, currentUser  }) {
                   {loading ? 'Guardando...' : (
                     <>
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                        <polyline points="17 21 17 13 7 13 7 21"/>
+                        <polyline points="7 3 7 8 15 8"/>
                       </svg>
                       Guardar Producto
                     </>

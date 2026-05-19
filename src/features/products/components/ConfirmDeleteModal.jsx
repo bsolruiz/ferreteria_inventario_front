@@ -40,19 +40,12 @@ export default function ConfirmDeleteModal({ producto, onConfirmar, onCancelar, 
               </svg>
               <p className="text-orange-300 text-xs leading-relaxed">
                 Este producto tiene <span className="font-bold">movimientos registrados</span>.
-                Al inactivarlo, el historial de movimientos se conservará íntegro.
+               
               </p>
             </div>
           )}
 
-          <div className="bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 mb-6">
-            <p className="text-slate-300 text-xs leading-relaxed">
-              El producto dejará de aparecer en el inventario y los reportes, pero su historial quedará intacto.
-              Esta acción <span className="font-bold text-white">no elimina</span> ningún dato permanentemente.
-            </p>
-          </div>
-
-          <div className="flex gap-3">
+          <div className="flex gap-3 mt-6">
             <button onClick={onCancelar} disabled={loading}
               className="flex-1 px-4 py-3 rounded-xl text-sm font-semibold text-slate-300 bg-slate-800 border border-slate-700 hover:bg-slate-700 transition-colors disabled:opacity-50">
               Cancelar

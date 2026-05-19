@@ -1,18 +1,12 @@
-import { useState, useEffect, useMemo } from 'react';
-import { listarProductos } from '../pages/productoService';
+import { useInventario } from '../hooks/useInventario';
 import ProductosTable from '../components/ProductosTable';
 import Navbar from '../../../components/Navbar';
 
-const FILTROS = { TODOS: 'todos', BAJO: 'bajo', SIN_STOCK: 'sinStock' };
-
-function StatCard({ icono, label, valor, colorIcono, colorBadge, badge, activo, onClick }) {
+function StatCard({ icono, label, valor, colorBadge, badge, activo, onClick }) {
   return (
-    <button
-      onClick={onClick}
+    <button onClick={onClick}
       className={`w-full text-left bg-[var(--color-surface-dark)] rounded-xl p-5 border shadow-sm transition-all
-        ${activo
-          ? 'border-[var(--color-primary)] ring-1 ring-[var(--color-primary)]/40'
-          : 'border-slate-800 hover:border-slate-600'}`}>
+        ${activo ? 'border-[var(--color-primary)] ring-1 ring-[var(--color-primary)]/40' : 'border-slate-800 hover:border-slate-600'}`}>
       <div className="flex items-center justify-between mb-4">
         <div className="p-2 bg-slate-800 rounded-lg text-xl">{icono}</div>
         <span className={`text-xs font-medium px-2 py-1 rounded ${colorBadge}`}>{badge}</span>
@@ -24,43 +18,13 @@ function StatCard({ icono, label, valor, colorIcono, colorBadge, badge, activo, 
 }
 
 export default function InventarioPage({ onNavegar, currentUser }) {
-  const [productos, setProductos]   = useState([]);
-  const [loading, setLoading]       = useState(true);
-  const [error, setError]           = useState('');
-  const [filtro, setFiltro]         = useState(FILTROS.TODOS);
-
-  const cargarProductos = () => {
-    setLoading(true);
-    listarProductos()
-      .then(setProductos)
-      .catch(() => setError('No se pudo conectar con el servidor'))
-      .finally(() => setLoading(false));
-  };
-
-  useEffect(() => { cargarProductos(); }, []);
-
-  // Stats globales (siempre sobre todos los productos)
-  const totalProductos = productos.length;
-  const stockBajoCount = productos.filter(p => p.cantidad > 0 && p.cantidad <= 10).length;
-  const sinStockCount  = productos.filter(p => p.cantidad === 0).length;
-
-  // Productos filtrados para la tabla
-  const productosFiltrados = useMemo(() => {
-    if (filtro === FILTROS.BAJO)       return productos.filter(p => p.cantidad > 0 && p.cantidad <= 10);
-    if (filtro === FILTROS.SIN_STOCK)  return productos.filter(p => p.cantidad === 0);
-    return productos;
-  }, [productos, filtro]);
-
-  // Valor total se calcula sobre los productos visibles en tabla
-  const valorTotal = productosFiltrados.reduce(
-    (acc, p) => acc + (Number(p.precio) * (p.cantidad ?? 0)), 0
-  );
-
-  const handleActualizado = (actualizado) =>
-    setProductos(prev => prev.map(p => p.idProducto === actualizado.idProducto ? actualizado : p));
-
-  const handleEliminado = (id) =>
-    setProductos(prev => prev.filter(p => p.idProducto !== id));
+  const {
+    loading, error, filtro, setFiltro,
+    totalProductos, stockBajoCount, sinStockCount,
+    productosFiltrados, valorTotal,
+    cargarProductos, handleActualizado, handleEliminado,
+    FILTROS,
+  } = useInventario();
 
   return (
     <div className="min-h-screen bg-[var(--color-background-dark)]">
@@ -99,47 +63,30 @@ export default function InventarioPage({ onNavegar, currentUser }) {
             </div>
           </div>
 
-          {/* Cards — todas clickeables */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <StatCard
-              icono="📦" label="Total Productos" valor={totalProductos}
+            <StatCard icono="📦" label="Total Productos" valor={totalProductos}
               badge="En sistema" colorBadge="bg-slate-700 text-slate-300"
-              activo={filtro === FILTROS.TODOS}
-              onClick={() => setFiltro(FILTROS.TODOS)}
-            />
-            <StatCard
-              icono="⚠️" label="Stock Bajo" valor={stockBajoCount}
+              activo={filtro === FILTROS.TODOS} onClick={() => setFiltro(FILTROS.TODOS)} />
+            <StatCard icono="⚠️" label="Stock Bajo" valor={stockBajoCount}
               badge="≤ 10 uds." colorBadge="bg-orange-500/10 text-orange-400"
-              activo={filtro === FILTROS.BAJO}
-              onClick={() => setFiltro(FILTROS.BAJO)}
-            />
-            <StatCard
-              icono="🚫" label="Sin Stock" valor={sinStockCount}
+              activo={filtro === FILTROS.BAJO} onClick={() => setFiltro(FILTROS.BAJO)} />
+            <StatCard icono="🚫" label="Sin Stock" valor={sinStockCount}
               badge="Agotados" colorBadge="bg-red-500/10 text-red-400"
-              activo={filtro === FILTROS.SIN_STOCK}
-              onClick={() => setFiltro(FILTROS.SIN_STOCK)}
-            />
-            <StatCard
-              icono="💰" label="Valor Total"
-              valor={`$${valorTotal.toLocaleString('es-CO')}`}
+              activo={filtro === FILTROS.SIN_STOCK} onClick={() => setFiltro(FILTROS.SIN_STOCK)} />
+            <StatCard icono="💰" label="Valor Total" valor={`$${valorTotal.toLocaleString('es-CO')}`}
               badge={filtro === FILTROS.TODOS ? 'Inventario' : filtro === FILTROS.BAJO ? 'Stock bajo' : 'Sin stock'}
               colorBadge="bg-green-500/10 text-green-400"
-              activo={false}
-              onClick={() => {}}
-            />
+              activo={false} onClick={() => {}} />
           </div>
 
-          {/* Indicador de filtro activo */}
           {filtro !== FILTROS.TODOS && (
             <div className="flex items-center gap-3 -mt-4">
               <span className="text-xs text-slate-400">
-                Mostrando:{' '}
-                <span className="text-white font-medium">
+                Mostrando: <span className="text-white font-medium">
                   {filtro === FILTROS.BAJO ? 'productos con stock bajo (≤ 10 uds.)' : 'productos sin stock'}
                 </span>
               </span>
-              <button
-                onClick={() => setFiltro(FILTROS.TODOS)}
+              <button onClick={() => setFiltro(FILTROS.TODOS)}
                 className="text-xs text-[var(--color-primary)] hover:underline">
                 Ver todos
               </button>
