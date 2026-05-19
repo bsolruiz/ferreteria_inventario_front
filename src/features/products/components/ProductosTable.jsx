@@ -62,7 +62,7 @@ export default function ProductosTable({ productos, onActualizado, onEliminado }
     setEliminando(true);
     try {
       await eliminarProducto(productoAEliminar.idProducto);
-      toast.success('Producto eliminado correctamente');
+      toast.success('Producto inactivado correctamente');
       onEliminado(productoAEliminar.idProducto);
       setProductoAEliminar(null);
     } catch (err) {
@@ -211,7 +211,7 @@ export default function ProductosTable({ productos, onActualizado, onEliminado }
                             </svg>
                           </button>
                           <button onClick={() => setProductoAEliminar(p)}
-                            className="p-2 rounded-lg text-slate-400 hover:text-red-400 hover:bg-slate-700 transition-colors" title="Eliminar">
+                            className="p-2 rounded-lg text-slate-400 hover:text-red-400 hover:bg-slate-700 transition-colors" title="Inactivar">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                               <polyline points="3 6 5 6 21 6"/>
                               <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
